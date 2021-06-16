@@ -54,11 +54,10 @@ namespace uni {
       if (isEmpty())
         return {};
 
-      const int last = 
-        getIndexOfLast();
-
+      auto res = getBack();
       count--;
-      return buffer[last];
+
+      return res;
     }
 
 
