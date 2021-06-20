@@ -1,5 +1,3 @@
-#ifndef CIRCULAR_BUFFER_HPP_
-#define CIRCULAR_BUFFER_HPP_
 #pragma once
 
 #include <initializer_list>
@@ -110,5 +108,3 @@ namespace uni {
     int count;
   };
 }
-
-#endif // !CIRCULAR_BUFFER_HPP_
