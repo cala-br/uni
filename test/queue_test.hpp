@@ -9,8 +9,19 @@ namespace test {
   using StringQueue = CbQueue<string_view, 10>;
   using IntQueue = CbQueue<int, 5>;
 
+  struct FewDequeued {
+    int actual;
+    int expected;
+  };
 
-  ostream& enqueue(auto &q, auto gen, int times) {
+  template <typename T>
+  struct WrongDequeued {
+    T actual;
+    T expected;
+  };
+
+
+  ostream& enqueueMany(auto &q, auto gen, int times) {
     for (int i = 0; i < times; i++) {
       auto val = gen();
       q.tryEnqueue(val);
@@ -21,9 +32,19 @@ namespace test {
     return clog;
   }
 
-  ostream& dequeue(auto &q, int times) {
+  ostream& dequeueMany(auto &q, auto gen, int times) {
     for (int i = 0; i < times; i++) {
-      clog << "got: " << *q.tryDequeue() << '\n';
+      auto val = q.tryDequeue();
+      if (!val) {
+        throw FewDequeued{i, times};
+      }
+
+      auto expected = gen();
+      if (expected != *val) {
+        throw WrongDequeued{*val, expected};
+      }
+      
+      clog << "got: " << *val << '\n';
     }
 
     return clog;
@@ -50,15 +71,19 @@ namespace test {
     try {
       StringQueue queue;
 
-      auto generator = StringGen{};
-
-      enqueue(queue, generator, 10) << '\n';
-      dequeue(queue, 5) << '\n';
+      enqueueMany(queue, StringGen{}, 10) << '\n';
+      dequeueMany(queue, StringGen{}, 5) << '\n';
 
       clog << "testQueue: ✅\n";
     }
+    catch (FewDequeued &err) {
+      cerr << "testQueue: dequeued just " << err.actual << " out of " << err.expected << " ❌\n";
+    }
+    catch (WrongDequeued<string_view> &err) {
+      cerr << "testQueue: dequeued '" << err.actual << "' instead of '" << err.expected << "' ❌\n";
+    }
     catch (...) {
-      cerr << "testQueue: ❌\n";
+      cerr << "testQueue: general error ❌\n";
     }
   }
 }
