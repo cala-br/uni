@@ -1,10 +1,11 @@
 #pragma once
 
 #include <circular_buffer/circular_buffer.hpp>
+#include "queue_base.hpp"
 
 namespace uni {
   template <typename T, int MaxLength>
-  class CbQueue {
+  class CbQueue : public IQueue<T> {
   public:
     CbQueue()
       : buffer({})
