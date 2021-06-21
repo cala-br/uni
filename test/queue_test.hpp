@@ -27,7 +27,7 @@ namespace test {
     g.next();
   };
 
-  ostream& enqueueMany(IsQueue auto &q, Generator auto gen, int times) {
+  ostream& enqueueMany(QueueLike auto &q, Generator auto gen, int times) {
     for (int i = 0; i < times; i++) {
       auto val = gen.next();
       q.tryEnqueue(val);
@@ -38,7 +38,7 @@ namespace test {
     return clog;
   }
 
-  ostream& dequeueMany(IsQueue auto &q, Generator auto gen, int times) {
+  ostream& dequeueMany(QueueLike auto &q, Generator auto gen, int times) {
     for (int i = 0; i < times; i++) {
       auto val = q.tryDequeue();
       if (!val) {

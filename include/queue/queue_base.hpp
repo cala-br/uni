@@ -7,11 +7,9 @@
 
 namespace uni {
   template <typename QueueT>
-  concept IsQueue = requires (QueueT q) {
-    requires requires (typename QueueT::ValueType v) {
-      { q.tryEnqueue(v) } -> std::same_as<bool>;
-      { q.tryDequeue() } -> std::same_as<std::optional<typename QueueT::ValueType>>;
-    };
+  concept QueueLike = requires (QueueT q, typename QueueT::ValueType v) {
+    { q.tryEnqueue(v) } -> std::same_as<bool>;
+    { q.tryDequeue() } -> std::same_as<std::optional<typename QueueT::ValueType>>;
   };
 
   
