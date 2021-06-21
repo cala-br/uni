@@ -1,6 +1,7 @@
-#include <iostream>
 #include <string_view>
 #include <queues>
+#include <iostream>
+#include <concepts>
 
 namespace test {
   using namespace uni;
@@ -21,9 +22,14 @@ namespace test {
   };
 
 
-  ostream& enqueueMany(auto &q, auto gen, int times) {
+  template <typename GenT>
+  concept Generator = requires (GenT g) {
+    g.next();
+  };
+
+  ostream& enqueueMany(IsQueue auto &q, Generator auto gen, int times) {
     for (int i = 0; i < times; i++) {
-      auto val = gen();
+      auto val = gen.next();
       q.tryEnqueue(val);
 
       clog << "put: " << val << '\n';
@@ -32,14 +38,14 @@ namespace test {
     return clog;
   }
 
-  ostream& dequeueMany(auto &q, auto gen, int times) {
+  ostream& dequeueMany(IsQueue auto &q, Generator auto gen, int times) {
     for (int i = 0; i < times; i++) {
       auto val = q.tryDequeue();
       if (!val) {
         throw FewDequeued{i, times};
       }
 
-      auto expected = gen();
+      auto expected = gen.next();
       if (expected != *val) {
         throw WrongDequeued{*val, expected};
       }
@@ -53,7 +59,7 @@ namespace test {
 
   class StringGen {
   public:
-    auto operator ()() {
+    auto next() {
       return values[++i %= values.size()];
     }
 
