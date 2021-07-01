@@ -2,6 +2,7 @@
 #define LINKED_LIST_ITERATOR_HPP_
 #pragma once
 
+#include <iterator>
 #include "linked_list_node.hpp"
 
 namespace uni {
@@ -10,6 +11,12 @@ namespace uni {
   public:
     using TNode = LinkedListNode<T>;
     using TIterator = LinkedListIterator<T>;
+
+    using iterator_category = std::forward_iterator_tag;
+    using value_type = TNode;
+    using difference_type = std::ptrdiff_t;
+    using pointer = TNode*;
+    using reference = TNode&;
 
     LinkedListIterator(TNode *start)
       : current(start)
@@ -26,12 +33,17 @@ namespace uni {
       return result;
     }
 
-    TNode& operator *() {
+    reference operator *() {
       return *current;
     }
 
-    TNode* operator ->() {
+    pointer operator ->() {
       return current;
+    }
+
+
+    int operator -(const TIterator& other) {
+      return current - other.current;
     }
 
     bool operator ==(const TIterator& other) {
@@ -40,7 +52,12 @@ namespace uni {
 
     bool operator !=(const TIterator& other) {
       return current != other.current;
-    };     
+    };
+
+
+    TNode* get() const {
+      return current;
+    }
 
   private:
     TNode *current;

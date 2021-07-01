@@ -40,6 +40,12 @@ namespace uni {
       return prev;
     }
 
+
+    void unlink() {
+      link(prev, next);
+    }
+
+
     static void link(TNode *prev, TNode *middle, TNode *next) {
       link(prev, middle);
       link(middle, next);
