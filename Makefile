@@ -10,6 +10,7 @@ endif
 INCLUDE=include/
 
 CXXFLAGS += -std=c++20
+CXXFLAGS += -Wall
 CXXFLAGS += -I$(INCLUDE)
 CXXFLAGS += -o $(OUTFILE)
 
