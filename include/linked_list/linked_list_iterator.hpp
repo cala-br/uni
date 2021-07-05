@@ -12,7 +12,7 @@ namespace uni {
     using TNode = LinkedListNode<T>;
     using TIterator = LinkedListIterator<T>;
 
-    using iterator_category = std::forward_iterator_tag;
+    using iterator_category = std::bidirectional_iterator_tag;
     using value_type = TNode;
     using difference_type = std::ptrdiff_t;
     using pointer = TNode*;
@@ -27,9 +27,20 @@ namespace uni {
       return *this;
     }
 
+    TIterator& operator --() {
+      current = current->prev;
+      return *this;
+    }
+
     TIterator operator ++(int) {
       auto result = *this;
       ++(*this);
+      return result;
+    }
+
+    TIterator operator --(int) {
+      auto result = *this;
+      --(*this);
       return result;
     }
 

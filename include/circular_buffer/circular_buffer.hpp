@@ -9,7 +9,7 @@ namespace uni {
   class CircularBuffer {
   public:
     CircularBuffer()
-      : front(0), count(0), buffer({})
+      : buffer({}), front(0), count(0)
     {};
 
     CircularBuffer(std::initializer_list<T> values): CircularBuffer() {

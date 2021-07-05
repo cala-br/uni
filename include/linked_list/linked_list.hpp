@@ -20,7 +20,10 @@ namespace uni {
     using Iterator = LinkedListIterator<T>;
 
     LinkedList()
-      : head(nullptr), tail(nullptr)
+      : 
+      head(nullptr),
+      tail(nullptr),
+      last({})
     {};
 
 
@@ -28,7 +31,7 @@ namespace uni {
       if (!head)
         return createHead(value);
 
-      return tail = tail->addNext(value);
+      return updateTail(value);
     };
 
     TNode* addFront(T value) {
@@ -78,23 +81,41 @@ namespace uni {
 
     TNode& nodeAt(int index) {
       auto curr = begin();
-      for (; index > 0 && curr != end(); --index, ++curr)
-        ;
-
+      std::advance(curr, index);
       return *curr;
     }
 
 
     Iterator begin() { return {head}; }
-    Iterator end() { return {tail->next}; }
+    Iterator end() { return {&last}; }
+
+    auto rbegin() {
+      return std::make_reverse_iterator(Iterator{&last});
+    }
+
+    auto rend() {
+      return std::make_reverse_iterator(Iterator{head});
+    }
 
   private:
     TNode* createHead(T value) {
-      return head = tail = new TNode {value};
+      head = tail = new TNode {value};
+      return linkLast();
+    }
+
+    TNode* updateTail(T value) {
+      tail = tail->addNext(value);
+      return linkLast();
+    }
+
+    TNode* linkLast() {
+      TNode::link(tail, &last);
+      return tail;
     }
 
     TNode *head;
     TNode *tail;
+    TNode last;
   };
 }
 

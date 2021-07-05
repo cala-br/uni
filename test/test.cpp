@@ -16,7 +16,7 @@ struct Person {
 int main() {
   using namespace uni;
 
-  LinkedList<Person> ll;
+  LinkedList<std::string_view> ll;
   ll.addBack({"luca"});
   ll.addBack({"mario"});
   ll.addBack({"gino"})
@@ -27,8 +27,10 @@ int main() {
   ll.remove(ll[1]);
   ll.tryRemove({"carlo"});
 
-  for (auto n : ll) {
-    std::clog << n->name << '\n';
+  std::reverse(ll.begin(), ll.end());
+
+  for (auto n = ll.rbegin(); n != ll.rend(); ++n) {
+    std::clog << (*n).value << '\n';
   }
 
   // test::queues();
